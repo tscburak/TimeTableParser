@@ -155,34 +155,34 @@ function gettext(pdfUrl){
                   }
 
                   if(ind >= 0 && ind<4){
-                    columns[i][index-rowNumber].str += " 09:00";
+                    columns[i][index-rowNumber].str += " ----09:00----";
                   }
                   else if(ind >= 4 && ind<8){
-                    columns[i][index-rowNumber].str += " 10:00";
+                    columns[i][index-rowNumber].str += " ----10:00----";
                   }
                   else if(ind >= 8 && ind<12){
-                    columns[i][index-rowNumber].str += " 11:00";
+                    columns[i][index-rowNumber].str += " ----11:00----";
                   }
                   else if(ind >= 12 && ind<16){
-                    columns[i][index-rowNumber].str += " 12:00";
+                    columns[i][index-rowNumber].str += " ----12:00----";
                   }
                   else if(ind >= 16 && ind<20){
-                    columns[i][index-rowNumber].str += " 13:00";
+                    columns[i][index-rowNumber].str += " ----13:00----";
                   }
                   else if(ind >= 20 && ind<24){
-                    columns[i][index-rowNumber].str += " 14:00";
+                    columns[i][index-rowNumber].str += " ----14:00----";
                   }
                   else if(ind >= 24 && ind<28){
-                    columns[i][index-rowNumber].str += " 15:00";
+                    columns[i][index-rowNumber].str += " ----15:00----";
                   }
                   else if(ind >= 28 && ind<32){
-                    columns[i][index-rowNumber].str += " 16:00";
+                    columns[i][index-rowNumber].str += " ----16:00----";
                   }
                   else if(ind >= 32 && ind<36){
-                    columns[i][index-rowNumber].str += " 17:00";
+                    columns[i][index-rowNumber].str += " ----17:00----";
                   }
                   else if(ind >= 36 && ind<40){
-                    columns[i][index-rowNumber].str += " 18:00";
+                    columns[i][index-rowNumber].str += " ----18:00----";
                   }
 
                 }
@@ -250,8 +250,8 @@ function gettext(pdfUrl){
       
       table[i].forEach((cell) => {
       
-        let time = cell.match(/([0-9][0-9])+:+([0-9][0-9])/g)
-        cell = cell.replace(/([0-9][0-9])+:+([0-9][0-9])/g,"");
+        let time = cell.match(/\-\-\-\-([^\*]*)\-\-\-\-/g)
+        cell = cell.replace(/\-\-\-\-([^\*]*)\-\-\-\-/g,"");
 
         let year = cell.match(/(1st|2nd|3rd|4th)\syear/g)
         cell = cell.replace(/(1st|2nd|3rd|4th)\syear/g,"")
