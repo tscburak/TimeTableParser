@@ -45,6 +45,38 @@ tr:nth-child(odd) {background: #CCC}
     margin: auto;
 }
 #link{
-    width: 30%;
+    width: 100%;
+    max-width: 450px;
     
 }
+
+.importfile, .chooseyear, .writedate, #container, .submit, .export{
+    padding: 10px;
+    
+}
+
+.warning{
+    padding: 10px;
+    color: #fc6a62;
+}
+
+a:link {
+    color: lightseagreen;
+    background-color: transparent;
+  }
+  
+  a:visited {
+    color: lightseagreen;
+    background-color: transparent;
+  }
+  
+  a:hover {
+    color: white;
+    background-color: lightseagreen;
+  }
+  
+  a:active {
+    color: lightseagreen;
+    background-color: transparent;
+    text-decoration: underline;
+  }

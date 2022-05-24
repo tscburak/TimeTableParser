@@ -240,7 +240,9 @@ function gettext(pdfUrl){
       return table;
       }, 
       function (reason) {
-        console.error(reason);
+        showErrorOnHTML("Please make sure that you are imported a valid PDF file");
+        throw new Error("Please make sure that you are imported a valid PDF file");
+        
       });
   }
   function toObjectList(table){
@@ -327,7 +329,7 @@ function createHTMLTable(list){
   table.id = "TableToExport";
   var titles = document.createElement('tr');
   titles.class = "title";
-  let headerContent = ["Date","Course", "Time", "Location", "Year"]
+  let headerContent = ["Date (dd/mm/yyyy)","Course", "Time", "Location", "Year"]
  //create headers
   let header = document.createElement('th')  
     titles.appendChild(header);
@@ -351,7 +353,7 @@ function createHTMLTable(list){
     tr.appendChild(td);
     for(let j = 0; j< headerContent.length; j++){
       td = document.createElement('td');
-      td.appendChild(document.createTextNode(list[i][headerContent[j].toLowerCase()]))
+      td.appendChild(document.createTextNode(list[i][headerContent[j].split(" ")[0].toLowerCase()]))
       tr.appendChild(td);
     }
 
@@ -366,7 +368,10 @@ function createHTMLTable(list){
   b.appendChild(document.createTextNode("Export as XLSX"));
   exportButton.appendChild(b);
   //document.body.appendChild(document.createElement("br"));
-  container.appendChild(exportButton);
+  let div = document.createElement("div");
+  div.setAttribute("class","export");
+  div.appendChild(exportButton);
+  document.body.appendChild(div);
 }
 
 function showErrorOnHTML(string){
@@ -380,10 +385,6 @@ let text = container.appendChild(document.createElement("a"));
 text.setAttribute("class","error");
 text.appendChild(document.createTextNode(string))
 container.appendChild(text);
-}
-
-function checkMandatorySection(){
-
 }
 
 Date.prototype.addDays = function(days) {
@@ -440,18 +441,67 @@ function main(){
     startDate = new Date(2022, 5, 20);
   }else{
     let day,month,year;
-    [day,month,year] = date.split("/")
+    [year,month,day] = date.split("-")
     startDate = new Date(year,month-1,day);
     if(isNaN(startDate)){
       showErrorOnHTML("Please make sure that you write the date in correct format. (DD/MM/YYYY)")
-      throw new Error("Choose at least one of the options above");
+      throw new Error("Please make sure that you write the date in correct format. (DD/MM/YYYY)");
     }
     
     
     
   }
+  try{
+    readFile(fileURL, startDate); 
+  }catch{
+console.log("s");
+  }
+ 
   
-  readFile(fileURL, startDate); 
-    
-  
+}
+
+function changeInputStatus(owner){
+  let input1 = document.getElementById('pdf');
+  let input2 = document.getElementById('link');
+  if(owner == "pdf"){
+    input1.disabled = false;
+    input2.disabled= true 
+
+  }else if(owner == "link"){
+    input1.disabled =true;
+    input2.disabled= false; 
+  }
+}
+
+document.addEventListener("change", checkMandatorySection);
+
+function checkMandatorySection(){
+  let input1 = document.getElementById('pdf');
+  let input2 = document.getElementById('link');
+
+ 
+
+  let checkbox1 = document.getElementById('1st');
+  let checkbox2 = document.getElementById('2nd');
+  let checkbox3 = document.getElementById('3rd');
+  let checkbox4 = document.getElementById('4th');
+
+  let button = document.getElementById('input-button');
+
+  let inputsAreFilled;
+
+  if(document.getElementById("radioPdf").checked){
+    inputsAreFilled = input1.value != "";
+  }else if(document.getElementById("radioLink").checked){
+    inputsAreFilled = input2.value != "";
+  }
+
+  let boxesAreFilled = checkbox1.checked || checkbox2.checked || checkbox3.checked || checkbox4.checked;
+  console.log("boxes "+boxesAreFilled);
+  if(inputsAreFilled && boxesAreFilled){
+    button.disabled = false;
+  }
+  else{
+    button.disabled = true;
+  }
 }

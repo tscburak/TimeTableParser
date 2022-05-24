@@ -4,51 +4,61 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <link
-      rel="stylesheet"
-      href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
-      integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
-      crossorigin="anonymous"
-    />
     <link rel="stylesheet" href="./src/style.css" />
     <title>PDF Parser</title>
   </head>
   <body>
-    <input type ="radio" name="pdfChoice" id="radioPdf">
-    <label class="input-pdf" for="radioPdf" >Import the PDF file from your computer:</label>
-    <input type="file" class = "input-pdf"  id="pdf" accept=".pdf">
-    <br>
-    <input type ="radio" name="pdfChoice" id="radioLink" >
-    <label for ="radioLink" class="input-pdf" >Import the PDF file via link:</label>
-    <input type="text" class = "input-pdf"  id="link" placeholder="e.g: https://cdn.uskudar.edu.tr/uploads/files/2022/04/17/guncel-abl.pdf">
-      <br>
-      <div requiered>
-        * <input type="checkbox" id="1st" name="year" value="1">
-        <label for="1st">1st Year</label>
-        <br>
-        &nbsp
-        <input type="checkbox" id="2nd" name="year" value="2">
-        <label for="2nd"> 2nd Year</label>
-        <br>
-        &nbsp 
-        <input type="checkbox" id="3rd" name="year" value="3">
-        <label for="3rd">3rd Year</label>
-        <br>
-        &nbsp
-        <input type="checkbox" id="4th" name="year" value="4">
-        <label for="4th">4th Year</label>
-        <br>
+    <div class = "introduction">
+      <h1><a href="https://uskudar.edu.tr/mdbf/tr/duyurular">UU MDBF</a> Exam Chart Parser</h1>
+      <p>You can create less confusing exam chart for your own. The site works for only UU MDBF students.</p>
+    </div>
+    <div class = "importfile">
+      <h3>*Import the PDF file</h3>
+      <div>
+        <input type ="radio" name="pdfChoice" id="radioPdf" onclick="changeInputStatus('pdf')">
+        <label class="input-pdf" for="radioPdf" >From your computer:</label>
+        <input disabled = "true" type="file" class = "input-pdf"  id="pdf" accept=".pdf">
       </div>
-      <br>
-      <label for ="date">Start Date of the Exams: </label>
-      <input type="text" id = "date" placeholder="DD/MM/YYYY">
-      <label for ="date">Default (20/06/2022)</label>
-      <br>
-      <br>
-      <button class = "input-pdf" id = "input-button" onclick=main()>Submit</button>
-      <br>
-      <br>
-    <label>Please check the exam schedule and verify the content in the table before using it.</label>
+      <div>
+        <input type ="radio" name="pdfChoice" id="radioLink" onclick="changeInputStatus('link')">
+        <label for ="radioLink" class="input-pdf" >Via link:</label>
+        <input disabled = "true" type="text" class = "input-pdf"  id="link" placeholder="e.g: https://cdn.uskudar.edu.tr/uploads/files/2022/04/17/guncel-abl.pdf">
+      </div>
+    </div>
+      <div class = "chooseyear">
+        <div>
+          <h3>*Choose the year(s)</h3>
+          <input type="checkbox" id="1st" name="year" value="1">
+          <label for="1st">1st Year</label>
+        </div>
+        <div>
+          <input type="checkbox" id="2nd" name="year" value="2">
+          <label for="2nd"> 2nd Year</label>
+        </div>
+        <div>
+          <input type="checkbox" id="3rd" name="year" value="3">
+          <label for="3rd">3rd Year</label>
+        </div>    
+        <div>
+          <input type="checkbox" id="4th" name="year" value="4">
+          <label for="4th">4th Year</label>
+        </div>
+      </div>
+
+      <div class = "writedate">
+        <h3>Provide the start date of the exam week (optional)</h3>
+        <p>Here is optional. If you do not choose any date, it takes the date of the final exam week by default. If you are using it for another exam week please select the start date of the exam week. You can check the other dates from  <a href="https://uskudar.edu.tr/en/academic-calendar" >here.</a ></p>
+        <input type="date" id = "date" value="2022-06-20">
+      </div>
+
+      <div class = "submit">
+        <button disabled="true" class = "input-pdf" id = "input-button" onclick=main()>Submit</button>
+      </div>
+
+      <div class = "warning">
+        <label>Please check the exam schedule and verify the content in the table before using it.</label>
+      </div>
+   
     <br>
     <br>
     <div id = "container">
