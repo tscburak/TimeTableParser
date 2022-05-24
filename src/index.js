@@ -451,13 +451,9 @@ function main(){
     
     
   }
-  try{
-    readFile(fileURL, startDate); 
-  }catch{
-console.log("s");
-  }
- 
-  
+
+  readFile(fileURL, startDate); 
+  autoScroll("container")
 }
 
 function changeInputStatus(owner){
@@ -504,4 +500,8 @@ function checkMandatorySection(){
   else{
     button.disabled = true;
   }
+}
+function autoScroll(element) {
+  let div = document.getElementById(element);
+  div.scrollTop = div.scrollHeight - div.clientHeight;
 }
