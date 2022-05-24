@@ -81,3 +81,10 @@ a:link {
     text-decoration: underline;
   }
 
+#output.failed{
+color:#fc6a62;  
+}
+#output.successed{
+color:#4CAF50;
+font-size: medium;
+}

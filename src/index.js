@@ -86,6 +86,7 @@ function gettext(pdfUrl){
         }
       }catch(error){
         showErrorOnHTML("Please upload an VALID exam schedule PDF file which is created by UU MDBF!")
+        showOutput("An error occured. See the output below.","failed")
         throw new Error("Please upload an PDF which is created by UU MDBF");
       }
       
@@ -241,6 +242,7 @@ function gettext(pdfUrl){
       }, 
       function (reason) {
         showErrorOnHTML("Please make sure that you are imported a valid PDF file");
+        showOutput("An error occured. See the output below.","failed")
         throw new Error("Please make sure that you are imported a valid PDF file");
         
       });
@@ -372,6 +374,7 @@ function createHTMLTable(list){
   div.setAttribute("class","export");
   div.appendChild(exportButton);
   document.body.appendChild(div);
+  showOutput("Created successfully in below!","successed");
 }
 
 function showErrorOnHTML(string){
@@ -381,7 +384,7 @@ while(child){
   container.removeChild(child);
   child = container.lastElementChild;
 }
-let text = container.appendChild(document.createElement("a"));
+let text = container.appendChild(document.createElement("p"));
 text.setAttribute("class","error");
 text.appendChild(document.createTextNode(string))
 container.appendChild(text);
@@ -412,6 +415,7 @@ function main(){
       fileURL = window.URL.createObjectURL(file);
     }catch{
       showErrorOnHTML("Please upload an exam schedule PDF file which is created by UU MDBF!")
+      showOutput("An error occured. See the output below.","failed")
     throw new Error("Please upload a PDF which is created by UU MDBF");
     }
   }else if(rad2.checked){
@@ -420,18 +424,21 @@ function main(){
       fileURL = link;
     }else{
       showErrorOnHTML("Please provide an exam schedule link via UU MDBF Website")
+      showOutput("An error occured. See the output below.","failed")
       throw new Error("Please provide an exam schedule link via UU MDBF Website");
     }
       
     }
    else{
     showErrorOnHTML("Please select an option to import the PDF file.")
+    showOutput("An error occured. See the output below.","failed")
     throw new Error("Please select an option to import the PDF file.");
   }
   
   let boxes = document.getElementsByName("year");
  if(!(boxes[0].checked ||boxes[1].checked || boxes[2].checked || boxes[3].checked)){
     showErrorOnHTML("Choose at least one of the options above (e.g: 1st year).")
+    showOutput("An error occured. See the output below.","failed")
     throw new Error("Choose at least one of the options above");
   }
 
@@ -445,15 +452,20 @@ function main(){
     startDate = new Date(year,month-1,day);
     if(isNaN(startDate)){
       showErrorOnHTML("Please make sure that you write the date in correct format. (DD/MM/YYYY)")
+      showOutput("An error occured. See the output below.","failed")
       throw new Error("Please make sure that you write the date in correct format. (DD/MM/YYYY)");
     }
     
     
     
   }
-
-  readFile(fileURL, startDate); 
-  autoScroll("container")
+    readFile(fileURL,startDate);
+    // new Promise(resolve => setTimeout(resolve, 800)).then(()=>{
+    //   let div = document.getElementById("container");
+    //   window.scrollTo(0,document.body.scrollHeight);
+    // })
+    
+  
 }
 
 function changeInputStatus(owner){
@@ -501,7 +513,19 @@ function checkMandatorySection(){
     button.disabled = true;
   }
 }
-function autoScroll(element) {
-  let div = document.getElementById(element);
-  div.scrollTop = div.scrollHeight - div.clientHeight;
+
+function scrollToBottom(){
+  window.scrollTo(0,document.body.scrollHeight);
+
+}
+
+function showOutput(message, type){
+  let output = document.getElementById("output");
+  let child = output.lastElementChild;
+  while(child){
+    output.removeChild(child);
+    child = output.lastElementChild;
+  }
+  output.setAttribute("class",type);
+  output.innerHTML = message;
 }
