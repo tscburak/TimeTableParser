@@ -14,25 +14,46 @@
     <title>PDF Parser</title>
   </head>
   <body>
-    <label class="input-pdf" for="pdf">Select the PDF file:</label>
+    <input type ="radio" name="pdfChoice" id="radioPdf">
+    <label class="input-pdf" for="radioPdf" >Import the PDF file from your computer:</label>
     <input type="file" class = "input-pdf"  id="pdf" accept=".pdf">
-    <button class = "input-pdf" id = "input-button" onclick=readFile()>Submit</button>
     <br>
-    <input type="checkbox" id="1st" name="year" value="1">
-    <label for="1st">1st Year</label>
+    <input type ="radio" name="pdfChoice" id="radioLink" >
+    <label for ="radioLink" class="input-pdf" >Import the PDF file via link:</label>
+    <input type="text" class = "input-pdf"  id="link" placeholder="e.g: https://cdn.uskudar.edu.tr/uploads/files/2022/04/17/guncel-abl.pdf">
+      <br>
+      <div requiered>
+        * <input type="checkbox" id="1st" name="year" value="1">
+        <label for="1st">1st Year</label>
+        <br>
+        &nbsp
+        <input type="checkbox" id="2nd" name="year" value="2">
+        <label for="2nd"> 2nd Year</label>
+        <br>
+        &nbsp 
+        <input type="checkbox" id="3rd" name="year" value="3">
+        <label for="3rd">3rd Year</label>
+        <br>
+        &nbsp
+        <input type="checkbox" id="4th" name="year" value="4">
+        <label for="4th">4th Year</label>
+        <br>
+      </div>
+      <br>
+      <label for ="date">Start Date of the Exams: </label>
+      <input type="text" id = "date" placeholder="DD/MM/YYYY">
+      <label for ="date">Default (20/06/2022)</label>
+      <br>
+      <br>
+      <button class = "input-pdf" id = "input-button" onclick=main()>Submit</button>
+      <br>
+      <br>
+    <label>Please check the exam schedule and verify the content in the table before using it.</label>
     <br>
-    <input type="checkbox" id="2nd" name="year" value="2">
-    <label for="2nd">2nd Year</label>
     <br>
-    <input type="checkbox" id="3rd" name="year" value="3">
-    <label for="3rd">3rd Year</label>
-    <br>
-    <input type="checkbox" id="4th" name="year" value="4">
-    <label for="4th">4th Year</label>
-    <br>
-    <br>
-    <label for="text-area">The output:</label>
-    <br>
+    <div id = "container">
+
+    </div>
 <!-- <textarea id="text-area" cols="70" rows="20" readonly ="true">
 </textarea> -->
     <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>

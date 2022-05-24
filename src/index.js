@@ -1,7 +1,5 @@
 var filePath;
 
-
-
 function gettext(pdfUrl){
     var pdf = pdfjsLib.getDocument(pdfUrl).promise;
     return pdf.then(function(pdf) {
@@ -25,14 +23,11 @@ function gettext(pdfUrl){
   }
   
   // waiting on gettext to finish completion, or error
-  function readFile(){
-    var startDate = new Date(2022, 5, 20);
-    const file = document.getElementById('pdf').files[0];
-    const fileURL = window.URL.createObjectURL(file);
+  function readFile(fileURL,startDate){
+
     const columnTitles = ["Monday","Tuesday","Wednesday","Thursday","Friday","Monday","Tuesday","Wednesday","Thursday","Friday"];
     const weekDays = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
     
-
     gettext(fileURL).then(function (text) {
       let columns = {}
       let rows = {}
@@ -72,22 +67,28 @@ function gettext(pdfUrl){
         columns[key] = columns[key].filter(value => !regexTR.test(value.str) || !regexEN.test(value.str) || !regexTime.test(value.str.trim()));
         columns[key] = columns[key].filter(value => value.str.trim() != "Saatler/Slots");
       });
-      for(let i = 0 ; i < 9; i++){
-        columns[i].forEach(left => {
-          columns[i+1].forEach(right => {         
-            if(left == right && Math.abs(left.transform[5]-right.transform[5]) < 5 ){
-              let distanceLeft = Math.abs(left.transform[4] - orgColumns[i].transform[4]);
-              let distanceRight = Math.abs(right.transform[4] - orgColumns[i+1].transform[4]);
-              if(distanceLeft > distanceRight){
-              deleteByVal(left,columns[i]);
+      try{
+        for(let i = 0 ; i < 9; i++){
+          columns[i].forEach(left => {
+            columns[i+1].forEach(right => {         
+              if(left == right && Math.abs(left.transform[5]-right.transform[5]) < 5 ){
+                let distanceLeft = Math.abs(left.transform[4] - orgColumns[i].transform[4]);
+                let distanceRight = Math.abs(right.transform[4] - orgColumns[i+1].transform[4]);
+                if(distanceLeft > distanceRight){
+                deleteByVal(left,columns[i]);
+                }
+                else if(distanceLeft < distanceRight){
+                deleteByVal(right,columns[i+1]);
+                }
               }
-              else if(distanceLeft < distanceRight){
-              deleteByVal(right,columns[i+1]);
-              }
-            }
-          })
-        });
+            })
+          });
+        }
+      }catch(error){
+        showErrorOnHTML("Please upload an VALID exam schedule PDF file which is created by UU MDBF!")
+        throw new Error("Please upload an PDF which is created by UU MDBF");
       }
+      
 
       //delete unnecessary data at the top and end
       table = {};
@@ -231,7 +232,7 @@ function gettext(pdfUrl){
       let boxes = document.getElementsByName("year");
       let years=[]
       boxes.forEach(box=>{
-        if(box.checked == true){
+        if(box.checked){
           years.push(box.value);
         }
       })
@@ -242,7 +243,6 @@ function gettext(pdfUrl){
         console.error(reason);
       });
   }
-
   function toObjectList(table){
     exams=[];
     index=0;
@@ -273,16 +273,13 @@ function gettext(pdfUrl){
             "course":cell.replace("  ",""),
             "location":location[0],
             "year":year[0],
-            "time":time[0],
+            "time":time[0].replaceAll("-",""),
             "date":date[0].replaceAll("*","")
         })
         index++;
       }
       })
     }
-
-
-    
     return exams;
   }
 
@@ -310,8 +307,12 @@ function gettext(pdfUrl){
 }
 
 function createHTMLTable(list){
-  console.log(list);
-  console.log(list.length);
+  let container = document.getElementById("container");
+  let child = container.lastElementChild;
+  while(child){
+    container.removeChild(child);
+    child = container.lastElementChild;
+  }
   try {
     let ifExist = document.getElementById("TableToExport");
     ifExist.remove();
@@ -349,14 +350,14 @@ function createHTMLTable(list){
     table.appendChild(tr);
     tr.appendChild(td);
     for(let j = 0; j< headerContent.length; j++){
-      console.log(list[i].course);
       td = document.createElement('td');
       td.appendChild(document.createTextNode(list[i][headerContent[j].toLowerCase()]))
       tr.appendChild(td);
     }
 
   }
-  document.body.appendChild(table);
+  container.appendChild(table);
+  // document.body.appendChild(table);
   
   let exportButton = document.createElement("button");
   exportButton.id = "sheetjsexport";
@@ -364,8 +365,25 @@ function createHTMLTable(list){
   b.setAttribute("onclick","exportXLSX()");
   b.appendChild(document.createTextNode("Export as XLSX"));
   exportButton.appendChild(b);
-  document.body.appendChild(document.createElement("br"));
-  document.body.appendChild(exportButton);
+  //document.body.appendChild(document.createElement("br"));
+  container.appendChild(exportButton);
+}
+
+function showErrorOnHTML(string){
+let container = document.getElementById("container");
+let child = container.lastElementChild;
+while(child){
+  container.removeChild(child);
+  child = container.lastElementChild;
+}
+let text = container.appendChild(document.createElement("a"));
+text.setAttribute("class","error");
+text.appendChild(document.createTextNode(string))
+container.appendChild(text);
+}
+
+function checkMandatorySection(){
+
 }
 
 Date.prototype.addDays = function(days) {
@@ -383,3 +401,57 @@ function DeleteRow(o) {
   /* Export to file (start a download) */
   XLSX.writeFile(wb, "ExamList.xlsx");
 };
+function main(){
+  let rad1 = document.getElementById("radioPdf");
+  let rad2 = document.getElementById("radioLink");
+  let fileURL;
+  if(rad1.checked){
+    try{
+      const file = document.getElementById('pdf').files[0];
+      fileURL = window.URL.createObjectURL(file);
+    }catch{
+      showErrorOnHTML("Please upload an exam schedule PDF file which is created by UU MDBF!")
+    throw new Error("Please upload a PDF which is created by UU MDBF");
+    }
+  }else if(rad2.checked){
+    let link = document.getElementById("link").value;
+    if(link !=""){
+      fileURL = link;
+    }else{
+      showErrorOnHTML("Please provide an exam schedule link via UU MDBF Website")
+      throw new Error("Please provide an exam schedule link via UU MDBF Website");
+    }
+      
+    }
+   else{
+    showErrorOnHTML("Please select an option to import the PDF file.")
+    throw new Error("Please select an option to import the PDF file.");
+  }
+  
+  let boxes = document.getElementsByName("year");
+ if(!(boxes[0].checked ||boxes[1].checked || boxes[2].checked || boxes[3].checked)){
+    showErrorOnHTML("Choose at least one of the options above (e.g: 1st year).")
+    throw new Error("Choose at least one of the options above");
+  }
+
+  const date = document.getElementById('date').value;
+  let startDate;
+  if(date == ""){
+    startDate = new Date(2022, 5, 20);
+  }else{
+    let day,month,year;
+    [day,month,year] = date.split("/")
+    startDate = new Date(year,month-1,day);
+    if(isNaN(startDate)){
+      showErrorOnHTML("Please make sure that you write the date in correct format. (DD/MM/YYYY)")
+      throw new Error("Choose at least one of the options above");
+    }
+    
+    
+    
+  }
+  
+  readFile(fileURL, startDate); 
+    
+  
+}
