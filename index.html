@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <link rel="stylesheet" href="./src/style.css" />
+    <script src="https://kit.fontawesome.com/295bdbc86a.js" crossorigin="anonymous"></script>
     <title>PDF Parser</title>
   </head>
   <body>
     <div class = "introduction">
       <h1><a href="https://uskudar.edu.tr/mdbf/tr/duyurular">UU MDBF</a> Exam Chart Parser</h1>
-      <p>You can create a less confusing exam chart on your own. The site works for only UU MDBF students.</p>
+      <p>You can create a less confusing exam chart on your own. The site works for only UU MDBF exam charts.</p>
     </div>
     <div class = "importfile">
       <h3>*Import the PDF file</h3>
@@ -60,7 +61,7 @@
       </div>
 
       <div class = "warning">
-        <label>Please check the exam schedule and verify the content in the table before using it.</label>
+        <h4><i class="fa-solid fa-circle-exclamation"></i> Please check the original exam chart and verify the content in the table, before using it.</h4>
       </div>
    
     <br>
@@ -73,5 +74,6 @@
     <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
     <script src="./src/index.js"></script>
+
   </body>
 </html>

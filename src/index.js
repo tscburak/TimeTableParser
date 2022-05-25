@@ -311,11 +311,11 @@ function gettext(pdfUrl){
 }
 
 function createHTMLTable(list){
-  let container = document.getElementById("container");
-  let child = container.lastElementChild;
+  let main = document.getElementById("container");
+  let child = main.lastElementChild;
   while(child){
-    container.removeChild(child);
-    child = container.lastElementChild;
+    main.removeChild(child);
+    child = main.lastElementChild;
   }
   try {
     let ifExist = document.getElementById("TableToExport");
@@ -326,6 +326,8 @@ function createHTMLTable(list){
   } catch (error) {
     
   }
+
+  let container = main.appendChild(document.createElement("div"));
   
   var table = document.createElement('table');
   table.id = "TableToExport";
@@ -370,10 +372,9 @@ function createHTMLTable(list){
   b.appendChild(document.createTextNode("Export as XLSX"));
   exportButton.appendChild(b);
   //document.body.appendChild(document.createElement("br"));
-  let div = document.createElement("div");
+  let div = main.appendChild(document.createElement("div"));
   div.setAttribute("class","export");
   div.appendChild(exportButton);
-  document.body.appendChild(div);
   showOutput("Created successfully in below!","successed");
 }
 
