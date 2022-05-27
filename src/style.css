@@ -1,5 +1,6 @@
 body{
     padding: 10px;
+    padding-bottom: 40px;
     font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -29,13 +30,13 @@ tr:nth-child(odd) {background: #CCC}
 
 
 #sheetjsexport {
-    background-color: #4CAF50; /* Green */
-    border: none;
-    color: white;
-    padding: 15px 32px;
     text-align: center;
-    text-decoration: none;
-    display: inline-block;
+    font-size: 16px;
+    padding: 5px 10px;
+  }
+  #printbutton {
+    padding: 5px 10px;
+    text-align: center;
     font-size: 16px;
   }
 .error{
@@ -50,13 +51,14 @@ tr:nth-child(odd) {background: #CCC}
     
 }
 
-.importfile, .chooseyear, .writedate, #container, .submit, .export{
+.importfile, .chooseyear, .writedate, #container, .submit{
     padding: 10px;
     
 }
-
+.export{
+  padding-bottom:20px ;
+}
 .warning{
-    padding-bottom: 10px;
     padding-left: 10px;
     color: #ffcc00;
 }
@@ -88,4 +90,8 @@ color:#fc6a62;
 #output.successed{
 color:#4CAF50;
 font-size: medium;
+}
+
+span + span {
+  margin-left: 10px;
 }

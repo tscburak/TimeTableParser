@@ -25,7 +25,7 @@ function gettext(pdfUrl){
   // waiting on gettext to finish completion, or error
   function readFile(fileURL,startDate){
 
-    const columnTitles = ["Monday","Tuesday","Wednesday","Thursday","Friday","Monday","Tuesday","Wednesday","Thursday","Friday"];
+    const columnTitles = [];
     const weekDays = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
     
     gettext(fileURL).then(function (text) {
@@ -68,7 +68,7 @@ function gettext(pdfUrl){
         columns[key] = columns[key].filter(value => value.str.trim() != "Saatler/Slots");
       });
       try{
-        for(let i = 0 ; i < 9; i++){
+        for(let i = 0 ; i < Object.keys(columns).length - 1; i++){
           columns[i].forEach(left => {
             columns[i+1].forEach(right => {         
               if(left == right && Math.abs(left.transform[5]-right.transform[5]) < 5 ){
@@ -83,41 +83,55 @@ function gettext(pdfUrl){
               }
             })
           });
+          
         }
       }catch(error){
         showErrorOnHTML("Please upload an VALID exam schedule PDF file which is created by UU MDBF!")
         showOutput("An error occured. See the output below.","failed")
-        throw new Error("Please upload an PDF which is created by UU MDBF");
+        throw error;
       }
       
 
       //delete unnecessary data at the top and end
       table = {};
-      for(let i = 0; i<10;i++){
+      for(let i = 0; i < Object.keys(columns).length ;i++){
         let ifFound = false;
         columns[i].forEach(row => {
-          if(!row.str.includes(columnTitles[i]) && !ifFound){
+          let isInclude = false;
+          weekDays.forEach(day =>{
+            if(row.str.includes(day)){
+              isInclude = true;
+              columnTitles.push(day);
+            }
+          })
+          if(!isInclude && !ifFound){
             delete deleteByVal(row,columns[i]);
-          }else if(row.str.includes(columnTitles[i])){
+          }else if(isInclude){
             delete deleteByVal(row,columns[i]);
             ifFound = true;
           }
         })
       }
+      filteredArray = weekDays.filter(day =>  !columnTitles.includes(day));
+      console.log(filteredArray);
+      let day = 0;
+      let currentDate;
+      let date;
 
-      for(let i = 0 ; i < 10; i++){
-        let date;
-        if(i > 0){
-          if(i == 5){
-            startDate = startDate.addDays(3);
-            date = startDate.getDate()+ "/"+ (startDate.getMonth()+1) +"/"+startDate.getFullYear() + " " + weekDays[startDate.getDay()];
-          }else{
-            startDate = startDate.addDays(1);
-            date = startDate.getDate()+ "/"+ (startDate.getMonth()+1)+"/"+startDate.getFullYear() + " " + weekDays[startDate.getDay()];
-          }
-        }else{
-          date = startDate.getDate() +"/"+(startDate.getMonth()+1)+"/"+startDate.getFullYear() + " " + weekDays[startDate.getDay()];
+      for(let i = 0 ; i < Object.keys(columns).length ; i++){
+
+        while(filteredArray.includes(weekDays[(day+1)%7])){
+          day++
+          onceIncrease = true
+          console.log("gird")
         }
+        currentDate = startDate.addDays(day);
+        console.log(currentDate,startDate,i, day);
+        date = currentDate.getDate()+ "/"+ (currentDate.getMonth()+1)+"/"+currentDate.getFullYear() + " " + weekDays[currentDate.getDay()];
+    
+        day++;
+
+        
         let rowNumber = 0;
         columns[i] = columns[i].filter(n => n);
         columns[i].forEach((row, index) =>{
@@ -186,6 +200,16 @@ function gettext(pdfUrl){
                   else if(ind >= 36 && ind<40){
                     columns[i][index-rowNumber].str += " ----18:00----";
                   }
+                  else if(ind >= 40 && ind<44){
+                    columns[i][index-rowNumber].str += " ----19:00----";
+                  }
+                  else if(ind >= 44 && ind<48){
+                    columns[i][index-rowNumber].str += " ----20:00----";
+                  }
+                  else if(ind >= 48 && ind<52){
+                    columns[i][index-rowNumber].str += " ----21:00----";
+                  }
+
 
                 }
               }
@@ -199,7 +223,7 @@ function gettext(pdfUrl){
       }
 
       // Join all columns content to string
-      for(let i = 0; i<10; i++){
+      for(let i = 0; i < Object.keys(columns).length ; i++){
         table[i] = "";
         columns[i].forEach(row => {
           table[i] += row.str + " ";
@@ -326,6 +350,8 @@ function createHTMLTable(list){
   } catch (error) {
     
   }
+  let div = main.appendChild(document.createElement("div"));
+  div.setAttribute("class","export");
 
   let container = main.appendChild(document.createElement("div"));
   
@@ -349,6 +375,7 @@ function createHTMLTable(list){
     let button = document.createElement('input');
     button.appendChild(document.createTextNode("Delete"));
     button.setAttribute("type","button");
+    button.setAttribute("class","delete");
     button.setAttribute("value","x");
     button.setAttribute("onclick","DeleteRow(this)");
     td.appendChild(button)
@@ -362,19 +389,32 @@ function createHTMLTable(list){
     }
 
   }
+
+  
   container.appendChild(table);
   // document.body.appendChild(table);
   
-  let exportButton = document.createElement("button");
+
+  let span1 = document.createElement("span");
+  let span2 = document.createElement("span");
+
+  let exportButton = document.createElement("input");
+  exportButton.setAttribute("type","button")
+  exportButton.setAttribute("onclick","exportXLSX()");
   exportButton.id = "sheetjsexport";
-  let b = document.createElement("b");
-  b.setAttribute("onclick","exportXLSX()");
-  b.appendChild(document.createTextNode("Export as XLSX"));
-  exportButton.appendChild(b);
-  //document.body.appendChild(document.createElement("br"));
-  let div = main.appendChild(document.createElement("div"));
-  div.setAttribute("class","export");
-  div.appendChild(exportButton);
+  exportButton.value = "Export as XLSX";
+  span1.appendChild(exportButton);
+  
+  let printButton = document.createElement("input");
+  printButton.setAttribute("type","button")
+  printButton.setAttribute("onclick","printData()");
+  printButton.id = "printbutton";
+  printButton.value = "Export as PDF/Print";
+  span2.appendChild(printButton);
+
+ 
+  div.appendChild(span1);
+  div.appendChild(span2);
   showOutput("Created successfully in below!","successed");
 }
 
@@ -529,4 +569,31 @@ function showOutput(message, type){
   }
   output.setAttribute("class",type);
   output.innerHTML = message;
+}
+
+function printData()
+{
+  let oldPage = document.body.innerHTML;
+  let exportButton = document.getElementById("sheetjsexport");
+  let printButton = document.getElementById("printbutton");
+
+  var tble = document.getElementById("TableToExport");
+
+      
+  var row = tble.rows; // Getting the rows
+  for (var i = 0; i < row.length; i++) {
+    row[i].deleteCell(0);
+  }
+  exportButton.remove();
+  printButton.remove();
+  let divElements = document.getElementById("container").innerHTML;
+  
+  //Reset the page's HTML with div's HTML only
+  document.body.innerHTML = 
+    "<html><head><title></title></head><body>" + 
+    divElements + "</body>";
+  //Print Page
+  window.print();
+  //Restore orignal HTML
+  document.body.innerHTML = oldPage;
 }
