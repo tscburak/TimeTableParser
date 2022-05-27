@@ -113,7 +113,6 @@ function gettext(pdfUrl){
         })
       }
       filteredArray = weekDays.filter(day =>  !columnTitles.includes(day));
-      console.log(filteredArray);
       let day = 0;
       let currentDate;
       let date;
@@ -123,10 +122,8 @@ function gettext(pdfUrl){
         while(filteredArray.includes(weekDays[(day+1)%7])){
           day++
           onceIncrease = true
-          console.log("gird")
         }
         currentDate = startDate.addDays(day);
-        console.log(currentDate,startDate,i, day);
         date = currentDate.getDate()+ "/"+ (currentDate.getMonth()+1)+"/"+currentDate.getFullYear() + " " + weekDays[currentDate.getDay()];
     
         day++;
@@ -546,7 +543,6 @@ function checkMandatorySection(){
   }
 
   let boxesAreFilled = checkbox1.checked || checkbox2.checked || checkbox3.checked || checkbox4.checked;
-  console.log("boxes "+boxesAreFilled);
   if(inputsAreFilled && boxesAreFilled){
     button.disabled = false;
   }
