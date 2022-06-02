@@ -116,7 +116,7 @@ function gettext(pdfUrl){
       let day = 0;
       let currentDate;
       let date;
-
+      
       for(let i = 0 ; i < Object.keys(columns).length ; i++){
 
         while(filteredArray.includes(weekDays[(day+1)%7])){
@@ -128,11 +128,35 @@ function gettext(pdfUrl){
     
         day++;
 
-        
+        let inPar = false;
         let rowNumber = 0;
         columns[i] = columns[i].filter(n => n);
-        columns[i].forEach((row, index) =>{
+        columns[i].forEach((row, index) =>{})
+        let arrLength = columns[i].length;
+        for(let z = 0 ; z<arrLength; z++){
+          let row = columns[i][z];
+          let index = z;
+          if(row.str.charAt(0) == "["){
+            inPar = true;
+          }
+          let match = row.str.match(/([A-Z]+( |)\d+)/g) == null ? []: row.str.match(/([A-Z]+( |)\d+)/g)
+          if(inPar == true && match.length > 0){
+            console.log(row);
+            console.log("asd");
+            // columns[i].splice(index-1, 0, row);
+            row = columns[i][index-1];
+            row.str += "undefined]";
+            columns[i].splice(index-1, 0, row);
+            // delete columns[i][index+1];
+           
+            row = columns[i][index-1];
+            console.log(row);
+            rowNumber--;
+            index--
+            // arrLength++;
+          }
           if(row.str.slice(-1)=="]"){
+            inPar = false;
             let rowHeight = 0
             for(let j = index-rowNumber ; j<= index ; j++){
               rowHeight += columns[i][j].transform[5];
@@ -216,7 +240,7 @@ function gettext(pdfUrl){
           else{
             rowNumber ++;
           }
-        })
+        }
       }
 
       // Join all columns content to string
@@ -250,7 +274,8 @@ function gettext(pdfUrl){
       //   textArea.value += examsList[i].time +" ";
       //   textArea.value += examsList[i].location +"\n\n";
       // }
-
+      console.log(table);
+      console.log(columns);
       let boxes = document.getElementsByName("year");
       let years=[]
       boxes.forEach(box=>{
@@ -274,7 +299,6 @@ function gettext(pdfUrl){
     for(let i = 0 ; i < Object.keys(table).length ; i++){
       
       table[i].forEach((cell) => {
-      
         let time = cell.match(/\-\-\-\-([^\*]*)\-\-\-\-/g)
         cell = cell.replace(/\-\-\-\-([^\*]*)\-\-\-\-/g,"");
 
@@ -294,13 +318,18 @@ function gettext(pdfUrl){
             }
         }
         if(!isSame){
-          exams.push({
-            "course":cell.replace("  ",""),
-            "location":location[0],
-            "year":year[0],
-            "time":time[0].replaceAll("-",""),
-            "date":date[0].replaceAll("*","")
-        })
+          try{
+            exams.push({
+              "course":cell.replace("  ",""),
+              "location":location[0],
+              "year":year[0],
+              "time":time[0].replaceAll("-",""),
+              "date":date[0].replaceAll("*","")
+          })
+          }catch(error){
+            console.log(error);
+          }
+          
         index++;
       }
       })
