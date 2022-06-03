@@ -139,7 +139,7 @@ function gettext(pdfUrl){
           if(row.str.charAt(0) == "["){
             inPar = true;
           }
-          let match = row.str.match(/([A-Z]+( |)\d+)/g) == null ? []: row.str.match(/([A-Z]+( |)\d+)/g)
+          let match = row.str.match(/([A-Z]+( |)\d+)+( |\r)+[A-Z,a-z]+/g) == null ? []: row.str.match(/([A-Z]+( |)\d+)+( |\r)+[A-Z,a-z]+/g)
           if(inPar == true && match.length > 0){
             console.log(row);
             console.log("asd");
