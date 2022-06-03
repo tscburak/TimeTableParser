@@ -141,19 +141,12 @@ function gettext(pdfUrl){
           }
           let match = row.str.match(/([A-Z]+( |)\d+)+( |\r)+[A-Z,a-z]+/g) == null ? []: row.str.match(/([A-Z]+( |)\d+)+( |\r)+[A-Z,a-z]+/g)
           if(inPar == true && match.length > 0){
-            console.log(row);
-            console.log("asd");
-            // columns[i].splice(index-1, 0, row);
             row = columns[i][index-1];
             row.str += "undefined]";
             columns[i].splice(index-1, 0, row);
-            // delete columns[i][index+1];
-           
             row = columns[i][index-1];
-            console.log(row);
             rowNumber--;
             index--
-            // arrLength++;
           }
           if(row.str.slice(-1)=="]"){
             inPar = false;
@@ -259,23 +252,6 @@ function gettext(pdfUrl){
         table[i] = table[i].filter(row => typeof row!= "undefined");
       }
       
-      // let textArea = document.getElementById('text-area')
-      // textArea.value='';
-      
-      // // for(let i = 0; i<10;i++){
-      // //   textArea.value+=columnTitles[i]+":\n";
-      // //   textArea.value+=table[i].join("\n");
-      // //   textArea.value+="\n\n";
-      // // }
-      // let examsList = getListByYear(table,2);
-      // for(let i = 0; i<examsList.length;i++){
-      //   textArea.value += examsList[i].course +"\n";
-      //   textArea.value += examsList[i].date +"\n";
-      //   textArea.value += examsList[i].time +" ";
-      //   textArea.value += examsList[i].location +"\n\n";
-      // }
-      console.log(table);
-      console.log(columns);
       let boxes = document.getElementsByName("year");
       let years=[]
       boxes.forEach(box=>{
