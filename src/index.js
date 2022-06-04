@@ -502,6 +502,7 @@ function main(){
     
     
   }
+    showOutput("Processing...","system");
     readFile(fileURL,startDate);
     // new Promise(resolve => setTimeout(resolve, 800)).then(()=>{
     //   let div = document.getElementById("container");

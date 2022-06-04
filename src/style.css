@@ -91,11 +91,17 @@ a:link {
 
 #output.failed{
 color:#fc6a62;  
+font-size: medium;
+
 }
 #output.successed{
 color:#4CAF50;
 font-size: medium;
 }
+#output.system{
+  color: gray;
+  font-size: medium;
+  }
 
 span + span {
   margin-left: 10px;
