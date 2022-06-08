@@ -4,7 +4,7 @@ function gettext(pdfUrl){
   try{
     let pdf = pdfjsLib.getDocument(pdfUrl).promise;
   }catch(error){
-    showErrorOnHTML("Internet Connection Error");
+    showErrorOnHTML(error);
     showOutput("An error occured. See the output below.","failed")
   }
     return pdf.then(function(pdf) {
