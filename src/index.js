@@ -1,7 +1,12 @@
 var filePath;
 
 function gettext(pdfUrl){
-    var pdf = pdfjsLib.getDocument(pdfUrl).promise;
+  try{
+    let pdf = pdfjsLib.getDocument(pdfUrl).promise;
+  }catch(error){
+    showErrorOnHTML("Internet Connection Error");
+    showOutput("An error occured. See the output below.","failed")
+  }
     return pdf.then(function(pdf) {
       var countPromises = []; // collecting all page promises
         var page = pdf.getPage(1);
@@ -303,7 +308,8 @@ function gettext(pdfUrl){
               "date":date[0].replaceAll("*","")
           })
           }catch(error){
-            console.log(error);
+            showErrorOnHTML(error);
+            showOutput("An error occured. See the output below.","failed")
           }
           
         index++;
