@@ -409,7 +409,7 @@ function createHTMLTable(list){
   let exportButton = document.createElement("input");
   exportButton.setAttribute("type","button")
   exportButton.setAttribute("onclick","exportXLSX()");
-  exportButton.id = "sheetjsexport";
+  exportButton.id = "sheetjsexport"; 
   exportButton.value = "Export as XLSX";
   span1.appendChild(exportButton);
   
