@@ -1,8 +1,9 @@
 var filePath;
 
 function gettext(pdfUrl){
+  let pdf;
   try{
-    let pdf = pdfjsLib.getDocument(pdfUrl).promise;
+    pdf = pdfjsLib.getDocument(pdfUrl).promise;
   }catch(error){
     showErrorOnHTML(error);
     showOutput("An error occured. See the output below.","failed")
